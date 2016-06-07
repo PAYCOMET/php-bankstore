@@ -461,6 +461,32 @@ class Paytpv_Bankstore
 	}
 
 	/**
+	* Ejecuta un pago por web service con el "pago por referencia" de cara a la migración de sistemas a PAYTPV.
+	* @param string $amount Importe del pago 1€ = 100
+	* @param string $transreference Identificador único del pago
+	* @param string $rtoken Referencia original de la tarjeta almacenada en sistema antiguo.
+	* @param string $currency Identificador de la moneda de la operación
+	* @param string $productdescription Descripción del producto
+	* @return object Objeto de respuesta de la operación
+	* @version 1.0 2016-06-07
+	*/
+
+	public function ExecutePurchaseRToken($amount, $transreference, $rtoken, $currency, $productdescription = false)
+	{
+		$signature = sha1($this->merchantCode.$this->terminal.$amount.$transreference.$rtoken.$this->password);
+
+		try{
+			$clientSOAP = new SoapClient($this->endpoint);
+			$ans = $clientSOAP->execute_purchase_rtoken($this->merchantCode, $this->terminal, $amount, $transreference, $rtoken, $currency, $signature, $productdescription);
+		} catch(SoapFault $e){
+			return $this->SendResponse();
+		}
+
+		return $this->SendResponse($ans);
+	}
+
+
+	/**
 	* INTEGRACIÓN BANKSTORE JET --------------------------------------------------->
 	*/
 

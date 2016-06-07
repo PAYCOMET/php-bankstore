@@ -34,6 +34,7 @@ $response = $paytpv->PreauthorizationConfirm("iduser", "tokenuser", "amount", "o
 $response = $paytpv->PreauthorizationCancel("iduser", "tokenuser", "amount", "operation_reference");
 $response = $paytpv->DeferredPreauthorizationConfirm("iduser", "tokenuser", "amount", "operation_reference");
 $response = $paytpv->DeferredPreauthorizationCancel("iduser", "tokenuser", "amount", "operation_reference");
+$response = $paytpv->ExecutePurchaseRToken("amount", "operation_reference", "reference_token", "currency");
 
 //------------------------------------------------  métodos por IFRAME/Fullscreen  ------------------------------------->
 
