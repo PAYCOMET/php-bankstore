@@ -1176,7 +1176,7 @@ class Paytpv_Bankstore
 			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$output = curl_exec($ch);
-			curl_close($ch);
+
 			if($errno = curl_errno($ch)) {
 				$response = array("DS_ERROR_ID" => 1021);
 			} else {
@@ -1186,6 +1186,8 @@ class Paytpv_Bankstore
 					$response = array("DS_ERROR_ID" => 0);
 				}
 			}
+
+			curl_close($ch);
 		}
 
 		return $response;
