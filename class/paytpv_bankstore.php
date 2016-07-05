@@ -122,18 +122,19 @@ class Paytpv_Bankstore
 	* @param string $currency Identificador de la moneda de la operación
 	* @param string $productdescription Descripción del producto
 	* @param string $owner Titular de la tarjeta
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
 	*/
 
-	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription, $owner)
+	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription, $owner, $scoring = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner);
+			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -230,11 +231,13 @@ class Paytpv_Bankstore
 	* @param string $periodicity Periodicidad de la suscripción. Expresado en días.
 	* @param string $amount Importe del pago 1€ = 100
 	* @param string $currency Identificador de la moneda de la operación
+	* @param string $ownerName (optional) Titular de la tarjeta
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
 	*/
 
-	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency)
+	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $ownerName = null, $scoring = null)
 	{
 		$pan = preg_replace('/\s+/', '', $pan);
 		$expdate = preg_replace('/\s+/', '', $expdate);
@@ -244,7 +247,7 @@ class Paytpv_Bankstore
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip);
+			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, 1, $ownerName, $scoring);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -313,18 +316,19 @@ class Paytpv_Bankstore
 	* @param string $periodicity Periodicidad de la suscripción. Expresado en días.
 	* @param string $amount Importe del pago 1€ = 100
 	* @param string $currency Identificador de la moneda de la operación
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
 	*/
 
-	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency)
+	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $scoring = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$currency.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip);
+			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, $scoring);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -341,18 +345,19 @@ class Paytpv_Bankstore
 	* @param string $currency Identificador de la moneda de la operación
 	* @param string $productdescription Descripción del producto
 	* @param string $owner Titular de la tarjeta
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
 	*/
 
-	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false)
+	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false, $scoring = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner);
+			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -524,11 +529,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false)
+	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -541,6 +547,9 @@ class Paytpv_Bankstore
 		$operation->Concept = $description;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -561,11 +570,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -580,6 +590,9 @@ class Paytpv_Bankstore
 		$operation->Concept = $description;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -627,11 +640,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false)
+	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -646,6 +660,9 @@ class Paytpv_Bankstore
 		$operation->Periodicity = $periodicity;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -668,11 +685,12 @@ class Paytpv_Bankstore
 	* @param string $tokenuser Código token asociado al IDUSER.
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false)
+	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -689,6 +707,9 @@ class Paytpv_Bankstore
 		$operation->TokenUser = $tokenuser;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -707,11 +728,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false)
+	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -724,6 +746,9 @@ class Paytpv_Bankstore
 		$operation->Concept = $description;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -834,11 +859,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -854,7 +880,9 @@ class Paytpv_Bankstore
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
 		}
-
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
+		}
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
 		if ($check_user_exist->DS_ERROR_ID != 0) {
 			return $this->SendResponse(array("DS_ERROR_ID" => $check_user_exist->DS_ERROR_ID));
@@ -877,11 +905,12 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	*/
 
-	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false)
+	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
 	{
 		$pretest = array();
 
@@ -894,6 +923,9 @@ class Paytpv_Bankstore
 		$operation->Concept = $description;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
 		}
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
