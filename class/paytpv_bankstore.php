@@ -32,8 +32,8 @@ class Paytpv_Bankstore
 		$this->terminal = $arg2;
 		$this->password = $arg3;
 		$this->jetid = $arg4;
-		$this->endpoint = 'https://secure.paytpv.com/gateway/xml_bankstore.php?wsdl';
-		$this->endpointurl = 'https://secure.paytpv.com/gateway/bnkgateway.php?';
+		$this->endpoint = 'https://secure.paytpv.com/gateway/xml-bankstore?wsdl';
+		$this->endpointurl = 'https://secure.paytpv.com/gateway/ifr-bankstore?';
 	}
 
 	/**
