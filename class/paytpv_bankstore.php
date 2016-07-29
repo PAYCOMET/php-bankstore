@@ -206,12 +206,12 @@ class Paytpv_Bankstore
 
 	public function ExecuteRefund($idpayuser, $tokenpayuser, $transreference, $currency, $authcode, $amount = NULL)
 	{
-		$signature = sha1($this->merchantCode.$payiduser.$tokenpayuser.$this->terminal.$authcode.$transreference.$this->password);
+		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$authcode.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-				$ans = $clientSOAP->execute_refund($this->merchantCode, $this->terminal, $payiduser, $tokenpayuser, $authcode, $transreference, $currency, $signature, $ip, $amount);
+				$ans = $clientSOAP->execute_refund($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $authcode, $transreference, $currency, $signature, $ip, $amount);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
