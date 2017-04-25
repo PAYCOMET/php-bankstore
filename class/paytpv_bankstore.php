@@ -1061,36 +1061,31 @@ class Paytpv_Bankstore
 	{
 		$hash = false;
 
-		$reference = $operationdata->Reference;
-		$amount = $operationdata->Amount;
-		$currency = $operationdata->Currency;
-		$iduser = $operationdata->IdUser;
-		$tokenuser = $operationdata->TokenUser;
 
 		if ((int)$operationtype == 1) {				// Authorization (execute_purchase)
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 3) {		// Preauthorization
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 6) {		// Confirmación de Preauthorization
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 4) {		// Cancelación de Preauthorization
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 9) {		// Subscription
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 107) {		// Add_user
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$reference.md5($this->password));
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.md5($this->password));
 		} elseif ((int)$operationtype == 109) {		// execute_purchase_token
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 110) {		// create_subscription_token
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 111) {		// create_preauthorization_token
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 13) {		// Preauthorization Diferida
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$reference.$amount.$currency.md5($this->password));
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 16) {		// Confirmación de Preauthorization Diferida
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 14) {		// Cancelación de Preauthorization Diferida
-			$hash = md5($this->merchantCode.$iduser.$tokenuser.$this->terminal.$operationtype.$reference.$amount.md5($this->password));
+			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		}
 
 		return $hash;
@@ -1113,16 +1108,24 @@ class Paytpv_Bankstore
 		$data["OPERATION"]							= $operationtype;
 		$data["LANGUAGE"]							= $operationdata->Language;
 		$data["MERCHANT_MERCHANTSIGNATURE"]			= $operationdata->Hash;
-		$data["URLOK"]								= $operationdata->UrlOk;
-		$data["URLKO"]								= $operationdata->UrlKo;
+
+		if (isset($operationdata->UrlOk))
+			$data["URLOK"]								= $operationdata->UrlOk;
+		
+		if (isset($operationdata->UrlKo))
+			$data["URLKO"]								= $operationdata->UrlKo;
+		
 		$data["MERCHANT_ORDER"]						= $operationdata->Reference;
-		if ($operationdata->Secure3D != false) {
+		if (isset($operationdata->Secure3D) && $operationdata->Secure3D != false)
 			$data["3DSECURE"]						= $operationdata->Secure3D;
-		}
-		$data["MERCHANT_AMOUNT"]					= $operationdata->Amount;
-		if ($operationdata->Concept != "") {
+		
+
+		if (isset($operationdata->Amount))
+			$data["MERCHANT_AMOUNT"]					= $operationdata->Amount;
+
+		if (isset($operationdata->Concept) && $operationdata->Concept != "")
 			$data["MERCHANT_PRODUCTDESCRIPTION"]	= $operationdata->Concept;
-		}
+		
 
 		if ((int)$operationtype == 1) {					// Authorization (execute_purchase)
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
