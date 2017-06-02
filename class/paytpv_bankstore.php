@@ -1129,10 +1129,12 @@ class Paytpv_Bankstore
 
 		if ((int)$operationtype == 1) {					// Authorization (execute_purchase)
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 3) {			// Preauthorization
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 6) {			// Confirmación de Preauthorization
 			$data["IDUSER"]							= $operationdata->IdUser;
 			$data["TOKEN_USER"]						= $operationdata->TokenUser;
@@ -1144,12 +1146,14 @@ class Paytpv_Bankstore
 			$data["SUBSCRIPTION_STARTDATE"]			= $operationdata->StartDate;
 			$data["SUBSCRIPTION_ENDDATE"]			= $operationdata->EndDate;
 			$data["SUBSCRIPTION_PERIODICITY"]		= $operationdata->Periodicity;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 109) {			// execute_purchase_token
 			$data["IDUSER"]							= $operationdata->IdUser;
 			$data["TOKEN_USER"]						= $operationdata->TokenUser;
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 110) {			// create_subscription_token
 			$data["IDUSER"]							= $operationdata->IdUser;
 			$data["TOKEN_USER"]						= $operationdata->TokenUser;
@@ -1157,15 +1161,18 @@ class Paytpv_Bankstore
 			$data["SUBSCRIPTION_STARTDATE"]			= $operationdata->StartDate;
 			$data["SUBSCRIPTION_ENDDATE"]			= $operationdata->EndDate;
 			$data["SUBSCRIPTION_PERIODICITY"]		= $operationdata->Periodicity;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 111) {			// create_preauthorization_token
 			$data["IDUSER"]							= $operationdata->IdUser;
 			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 13) {			// Deferred Preauthorization
 			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
+			if (isset($operationdata->Scoring))
+				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
 		} elseif ((int)$operationtype == 16) {			// Deferred Confirmación de Preauthorization
 			$data["IDUSER"]							= $operationdata->IdUser;
 			$data["TOKEN_USER"]						= $operationdata->TokenUser;
