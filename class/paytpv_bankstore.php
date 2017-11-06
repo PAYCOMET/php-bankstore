@@ -127,14 +127,14 @@ class Paytpv_Bankstore
 	* @version 2.0 2016-06-02
 	*/
 
-	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription, $owner, $scoring = null)
+	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription, $owner, $scoring = null, $merchant_data = null, $merchant_description = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring);
+			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -154,14 +154,14 @@ class Paytpv_Bankstore
 	* @version 1.0 2016-06-07
 	*/
 
-	public function ExecutePurchaseDcc($idpayuser, $tokenpayuser, $amount, $transreference, $productdescription = false, $owner = false)
+	public function ExecutePurchaseDcc($idpayuser, $tokenpayuser, $amount, $transreference, $productdescription = false, $owner = false, $merchant_description = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->execute_purchase_dcc($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $signature, $ip, $productdescription, $owner);
+			$ans = $clientSOAP->execute_purchase_dcc($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $signature, $ip, $productdescription, $owner, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -204,14 +204,14 @@ class Paytpv_Bankstore
 	* @version 2.0 2016-06-02
 	*/
 
-	public function ExecuteRefund($idpayuser, $tokenpayuser, $transreference, $currency, $authcode, $amount = NULL)
+	public function ExecuteRefund($idpayuser, $tokenpayuser, $transreference, $currency, $authcode, $amount = NULL, $merchant_description = NULL)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$authcode.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-				$ans = $clientSOAP->execute_refund($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $authcode, $transreference, $currency, $signature, $ip, $amount);
+				$ans = $clientSOAP->execute_refund($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $authcode, $transreference, $currency, $signature, $ip, $amount, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -350,14 +350,14 @@ class Paytpv_Bankstore
 	* @version 2.0 2016-06-02
 	*/
 
-	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false, $scoring = null)
+	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false, $scoring = null, $merchant_data = null, $merchant_description = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring);
+			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -375,14 +375,14 @@ class Paytpv_Bankstore
 	* @version 2.0 2016-06-02
 	*/
 
-	public function PreauthorizationConfirm($idpayuser, $tokenpayuser, $amount, $transreference)
+	public function PreauthorizationConfirm($idpayuser, $tokenpayuser, $amount, $transreference, $merchant_description = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$transreference.$amount.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->preauthorization_confirm($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $signature, $ip);
+			$ans = $clientSOAP->preauthorization_confirm($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $signature, $ip, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -476,13 +476,13 @@ class Paytpv_Bankstore
 	* @version 1.0 2016-06-07
 	*/
 
-	public function ExecutePurchaseRToken($amount, $transreference, $rtoken, $currency, $productdescription = false)
+	public function ExecutePurchaseRToken($amount, $transreference, $rtoken, $currency, $productdescription = false, $merchant_description = null)
 	{
 		$signature = sha1($this->merchantCode.$this->terminal.$amount.$transreference.$rtoken.$this->password);
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->execute_purchase_rtoken($this->merchantCode, $this->terminal, $amount, $transreference, $rtoken, $currency, $signature, $productdescription);
+			$ans = $clientSOAP->execute_purchase_rtoken($this->merchantCode, $this->terminal, $amount, $transreference, $rtoken, $currency, $signature, $productdescription, $merchant_description);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
