@@ -530,11 +530,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
+	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -551,6 +554,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -571,11 +583,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
+	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -594,6 +609,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -607,11 +631,14 @@ class Paytpv_Bankstore
 	* Devuelve la URL para lanzar un add_user bajo IFRAME/Fullscreen
 	* @param string $transreference Identificador único de la transacción
 	* @param string $lang Idioma de los literales de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function AddUserUrl($transreference, $lang = "ES")
+	public function AddUserUrl($transreference, $lang = "ES", $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -619,6 +646,14 @@ class Paytpv_Bankstore
 		$operation->Type = 107;
 		$operation->Reference = $transreference;
 		$operation->Language = $lang;
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -641,11 +676,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false, $scoring = null)
+	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -664,6 +702,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -686,11 +733,14 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false, $scoring = null)
+	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -711,6 +761,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -729,11 +788,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
+	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -750,6 +812,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -769,11 +840,14 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function PreauthorizationConfirmUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function PreauthorizationConfirmUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -788,6 +862,14 @@ class Paytpv_Bankstore
 		$operation->TokenUser = $tokenuser;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
 		}
 
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
@@ -814,11 +896,14 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function PreauthorizationCancelUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function PreauthorizationCancelUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -833,6 +918,14 @@ class Paytpv_Bankstore
 		$operation->TokenUser = $tokenuser;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
 		}
 
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
@@ -860,11 +953,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
+	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -883,6 +979,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
 		if ($check_user_exist->DS_ERROR_ID != 0) {
 			return $this->SendResponse(array("DS_ERROR_ID" => $check_user_exist->DS_ERROR_ID));
@@ -906,11 +1011,14 @@ class Paytpv_Bankstore
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null)
+	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -927,6 +1035,15 @@ class Paytpv_Bankstore
 		if ($scoring) {
 			$operation->Scoring = (int)$scoring;
 		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -946,11 +1063,14 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function DeferredPreauthorizationConfirmUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function DeferredPreauthorizationConfirmUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -965,6 +1085,14 @@ class Paytpv_Bankstore
 		$operation->TokenUser = $tokenuser;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
 		}
 
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
@@ -991,11 +1119,14 @@ class Paytpv_Bankstore
 	* @param string $lang Idioma de los literales de la transacción
 	* @param string $description Descripción de la operación
 	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
+	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function DeferredPreauthorizationCancelUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false)
+	public function DeferredPreauthorizationCancelUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $urlOk = null, $urlKo = null)
 	{
 		$pretest = array();
 
@@ -1010,6 +1141,14 @@ class Paytpv_Bankstore
 		$operation->TokenUser = $tokenuser;
 		if ($secure3d != false) {
 			$operation->Secure3D = $secure3d;
+		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
 		}
 
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
