@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYTPV
- * @version    1.1.0
+ * @version    1.1.3
  * @author     PAYTPV
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2016, PAYTPV
@@ -1236,105 +1236,120 @@ class Paytpv_Bankstore
 	* @param int $operationtype Tipo de operación para generar la petición
 	* @return string URL para enviar al ENDPOINTURL
 	* @version 1.0 2016-06-06
+	* @version 1.1.3 2017-12-20
 	*/
 	private function ComposeURLParams($operationdata, $operationtype)
 	{
 		$secureurlhash = false;
 		$data = array();
 
-		$data["MERCHANT_MERCHANTCODE"]				= $this->merchantCode;
-		$data["MERCHANT_TERMINAL"]					= $this->terminal;
-		$data["OPERATION"]							= $operationtype;
-		$data["LANGUAGE"]							= $operationdata->Language;
-		$data["MERCHANT_MERCHANTSIGNATURE"]			= $operationdata->Hash;
+		$data["MERCHANT_MERCHANTCODE"] = $this->merchantCode;
+		$data["MERCHANT_TERMINAL"] = $this->terminal;
+		$data["OPERATION"] = $operationtype;
+		$data["LANGUAGE"] = $operationdata->Language;
+		$data["MERCHANT_MERCHANTSIGNATURE"] = $operationdata->Hash;
 
-		if (isset($operationdata->UrlOk))
-			$data["URLOK"]								= $operationdata->UrlOk;
-		
-		if (isset($operationdata->UrlKo))
-			$data["URLKO"]								= $operationdata->UrlKo;
-		
-		$data["MERCHANT_ORDER"]						= $operationdata->Reference;
-		if (isset($operationdata->Secure3D) && $operationdata->Secure3D != false)
-			$data["3DSECURE"]						= $operationdata->Secure3D;
-		
+		if (isset($operationdata->UrlOk)) {
+			$data["URLOK"] = $operationdata->UrlOk;
+		}
 
-		if (isset($operationdata->Amount))
-			$data["MERCHANT_AMOUNT"]					= $operationdata->Amount;
+		if (isset($operationdata->UrlKo)) {
+			$data["URLKO"] = $operationdata->UrlKo;
+		}
 
-		if (isset($operationdata->Concept) && $operationdata->Concept != "")
-			$data["MERCHANT_PRODUCTDESCRIPTION"]	= $operationdata->Concept;
-		
+		$data["MERCHANT_ORDER"] = $operationdata->Reference;
 
-		if ((int)$operationtype == 1) {					// Authorization (execute_purchase)
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 3) {			// Preauthorization
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 6) {			// Confirmación de Preauthorization
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-		} elseif ((int)$operationtype == 4) {			// Cancelación de Preauthorization
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-		} elseif ((int)$operationtype == 9) {			// Subscription
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["SUBSCRIPTION_STARTDATE"]			= $operationdata->StartDate;
-			$data["SUBSCRIPTION_ENDDATE"]			= $operationdata->EndDate;
-			$data["SUBSCRIPTION_PERIODICITY"]		= $operationdata->Periodicity;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 109) {			// execute_purchase_token
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 110) {			// create_subscription_token
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			$data["SUBSCRIPTION_STARTDATE"]			= $operationdata->StartDate;
-			$data["SUBSCRIPTION_ENDDATE"]			= $operationdata->EndDate;
-			$data["SUBSCRIPTION_PERIODICITY"]		= $operationdata->Periodicity;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 111) {			// create_preauthorization_token
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 13) {			// Deferred Preauthorization
-			$data["MERCHANT_CURRENCY"]				= $operationdata->Currency;
-			if (isset($operationdata->Scoring))
-				$data["MERCHANT_SCORING"]				= $operationdata->Scoring;
-		} elseif ((int)$operationtype == 16) {			// Deferred Confirmación de Preauthorization
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
-		} elseif ((int)$operationtype == 14) {			// Deferred  Cancelación de Preauthorization
-			$data["IDUSER"]							= $operationdata->IdUser;
-			$data["TOKEN_USER"]						= $operationdata->TokenUser;
+		if (isset($operationdata->Secure3D) && $operationdata->Secure3D != false) {
+			$data["3DSECURE"] = $operationdata->Secure3D;
+		}
+
+		if (isset($operationdata->Amount)) {
+			$data["MERCHANT_AMOUNT"] = $operationdata->Amount;
+		}
+
+		if (isset($operationdata->Concept) && $operationdata->Concept != "") {
+			$data["MERCHANT_PRODUCTDESCRIPTION"] = $operationdata->Concept;
+		}
+
+		if ((int)$operationtype == 1) { // Authorization (execute_purchase)
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 3) { // Preauthorization
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 6) { // Confirmación de Preauthorization
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+		} elseif ((int)$operationtype == 4) { // Cancelación de Preauthorization
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+		} elseif ((int)$operationtype == 9) { // Subscription
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			$data["SUBSCRIPTION_STARTDATE"] = $operationdata->StartDate;
+			$data["SUBSCRIPTION_ENDDATE"] = $operationdata->EndDate;
+			$data["SUBSCRIPTION_PERIODICITY"] = $operationdata->Periodicity;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 109) { // execute_purchase_token
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 110) { // create_subscription_token
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			$data["SUBSCRIPTION_STARTDATE"] = $operationdata->StartDate;
+			$data["SUBSCRIPTION_ENDDATE"] = $operationdata->EndDate;
+			$data["SUBSCRIPTION_PERIODICITY"] = $operationdata->Periodicity;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 111) { // create_preauthorization_token
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 13) { // Deferred Preauthorization
+			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
+			if (isset($operationdata->Scoring)) {
+				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+		} elseif ((int)$operationtype == 16) { // Deferred Confirmación de Preauthorization
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
+		} elseif ((int)$operationtype == 14) { // Deferred  Cancelación de Preauthorization
+			$data["IDUSER"] = $operationdata->IdUser;
+			$data["TOKEN_USER"] = $operationdata->TokenUser;
 		}
 
 		$content = "";
-		foreach($data as $key => $value)
-		{
-			if($content != "") $content.="&";
-			$content .= urlencode($key)."=".urlencode($value);
+		foreach ($data as $key => $value) {
+			if ($content != "") {
+				$content .= "&";
+			}
+
+			$content .= urlencode($key) . "=" . urlencode($value);
 		}
 
 		$data["VHASH"] = hash('sha512', md5($content.md5($this->password)));
-		krsort($data);
 
 		$secureurlhash = "";
-		foreach($data as $key => $value)
-		{
-			if($secureurlhash != "") $secureurlhash.="&";
-			$secureurlhash .= urlencode($key)."=".urlencode($value);
+		foreach ($data as $key => $value) {
+			if ($secureurlhash != "") {
+				$secureurlhash .= "&";
+			}
+
+			$secureurlhash .= urlencode($key) . "=" . urlencode($value);
 		}
 
 		return $secureurlhash;
