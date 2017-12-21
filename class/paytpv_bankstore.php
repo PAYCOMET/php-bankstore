@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYTPV
- * @version    1.1.3
+ * @version    1.1.4
  * @author     PAYTPV
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2016, PAYTPV
@@ -123,6 +123,8 @@ class Paytpv_Bankstore
 	* @param string $productdescription Descripción del producto
 	* @param string $owner Titular de la tarjeta
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
 	*/
@@ -233,11 +235,12 @@ class Paytpv_Bankstore
 	* @param string $currency Identificador de la moneda de la operación
 	* @param string $ownerName (optional) Titular de la tarjeta
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
 	*/
 
-	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $ownerName = null, $scoring = null)
+	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $ownerName = null, $scoring = null, $merchant_data = null)
 	{
 		$pan = preg_replace('/\s+/', '', $pan);
 		$expdate = preg_replace('/\s+/', '', $expdate);
@@ -247,7 +250,7 @@ class Paytpv_Bankstore
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, 1, $ownerName, $scoring);
+			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, 1, $ownerName, $scoring, $merchant_data);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -317,18 +320,19 @@ class Paytpv_Bankstore
 	* @param string $amount Importe del pago 1€ = 100
 	* @param string $currency Identificador de la moneda de la operación
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
 	*/
 
-	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $scoring = null)
+	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $scoring = null, $merchant_data = null)
 	{
 		$signature = sha1($this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$currency.$this->password);
 		$ip	= $_SERVER['REMOTE_ADDR'];
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, $scoring);
+			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, $scoring, $merchant_data);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -346,6 +350,8 @@ class Paytpv_Bankstore
 	* @param string $productdescription Descripción del producto
 	* @param string $owner Titular de la tarjeta
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
 	*/
@@ -532,12 +538,14 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
 	{
 		$pretest = array();
 
@@ -563,6 +571,14 @@ class Paytpv_Bankstore
 			$operation->UrlKo = $urlKo;
 		}
 
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
+		if ($merchant_description){
+			$operation->Merchant_description = $merchant_description;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -585,12 +601,14 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
 	{
 		$pretest = array();
 
@@ -616,6 +634,14 @@ class Paytpv_Bankstore
 
 		if ($urlKo) {
 			$operation->UrlKo = $urlKo;
+		}
+
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
+		if ($merchant_description){
+			$operation->Merchant_description = $merchant_description;
 		}
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
@@ -678,12 +704,13 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function CreateSubscriptionUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null)
 	{
 		$pretest = array();
 
@@ -711,6 +738,10 @@ class Paytpv_Bankstore
 			$operation->UrlKo = $urlKo;
 		}
 
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -735,12 +766,13 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function CreateSubscriptionTokenUrl($transreference, $amount, $currency, $startdate, $enddate, $periodicity, $iduser, $tokenuser, $lang = "ES", $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null)
 	{
 		$pretest = array();
 
@@ -770,6 +802,10 @@ class Paytpv_Bankstore
 			$operation->UrlKo = $urlKo;
 		}
 
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -790,12 +826,14 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
 	{
 		$pretest = array();
 
@@ -820,6 +858,15 @@ class Paytpv_Bankstore
 		if ($urlKo) {
 			$operation->UrlKo = $urlKo;
 		}
+
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
+		if ($merchant_description){
+			$operation->Merchant_description = $merchant_description;
+		}
+
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -955,12 +1002,14 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
 	{
 		$pretest = array();
 
@@ -988,6 +1037,14 @@ class Paytpv_Bankstore
 			$operation->UrlKo = $urlKo;
 		}
 
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
+		if ($merchant_description){
+			$operation->Merchant_description = $merchant_description;
+		}
+
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
 		if ($check_user_exist->DS_ERROR_ID != 0) {
 			return $this->SendResponse(array("DS_ERROR_ID" => $check_user_exist->DS_ERROR_ID));
@@ -1013,12 +1070,14 @@ class Paytpv_Bankstore
 	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
 	* @param string $urlOk URL a la que redirigir en caso de éxito.
 	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null)
+	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
 	{
 		$pretest = array();
 
@@ -1042,6 +1101,14 @@ class Paytpv_Bankstore
 
 		if ($urlKo) {
 			$operation->UrlKo = $urlKo;
+		}
+
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}
+
+		if ($merchant_description){
+			$operation->Merchant_description = $merchant_description;
 		}
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
@@ -1269,6 +1336,14 @@ class Paytpv_Bankstore
 
 		if (isset($operationdata->Concept) && $operationdata->Concept != "") {
 			$data["MERCHANT_PRODUCTDESCRIPTION"] = $operationdata->Concept;
+		}
+
+		if (isset($operationdata->Merchant_data)) {
+			$data["MERCHANT_DATA"] = $operationdata->Merchant_data;
+		}
+
+		if (isset($operationdata->Merchant_description)) {
+			$data["MERCHANT_MERCHANTDESCRIPTOR"] = $operationdata->Merchant_description;
 		}
 
 		if ((int)$operationtype == 1) { // Authorization (execute_purchase)
