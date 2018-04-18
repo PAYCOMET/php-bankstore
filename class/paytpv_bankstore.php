@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYTPV
- * @version    1.2
+ * @version    1.2.1
  * @author     PAYTPV
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2016, PAYTPV
@@ -503,16 +503,18 @@ class Paytpv_Bankstore
 	 * @param integer $idUser Identificador del usuario en PAYTPV.
 	 * @param string $tokenUser Token del usuario en PAYTPV.
 	 * @param string $expiryDate Nueva fecha de caducidad de la tarjeta, expresada como “mmyy” (mes en dos cifras y año en dos cifras).
+	 * @param string optional $cvv2 Nuevo código de seguridad de la tarjeta.
 	 * @return object Objeto de respuesta de la operación
 	 * @version 1.0 20180411
+	 * @version 1.2.1 20180418
 	 */
-	public function UpdateExpiryDate($idUser, $tokenUser, $expiryDate)
+	public function UpdateExpiryDate($idUser, $tokenUser, $expiryDate, $cvv2 = '')
 	{
-		$signature = hash('sha256', $this->merchantCode . $this->terminal . $idUser . $tokenUser . $expiryDate . $this->password);
+		$signature = hash('sha256', $this->merchantCode . $this->terminal . $idUser . $tokenUser . $expiryDate . $cvv2 . $this->password);
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->update_expiry_date($this->merchantCode, $this->terminal, $idUser, $tokenUser, $expiryDate, $signature);
+			$ans = $clientSOAP->update_expiry_date($this->merchantCode, $this->terminal, $idUser, $tokenUser, $expiryDate, $cvv2, $signature);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
