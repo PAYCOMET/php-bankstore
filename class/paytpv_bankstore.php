@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYTPV
- * @version    1.2.1
+ * @version    1.2.2
  * @author     PAYTPV
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2016, PAYTPV
@@ -690,7 +690,7 @@ class Paytpv_Bankstore
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
 	*/
 
-	public function AddUserUrl($transreference, $lang = "ES", $urlOk = null, $urlKo = null)
+	public function AddUserUrl($transreference, $lang = "ES", $urlOk = null, $urlKo = null, $secure3d = false)
 	{
 		$pretest = array();
 
@@ -705,6 +705,10 @@ class Paytpv_Bankstore
 
 		if ($urlKo) {
 			$operation->UrlKo = $urlKo;
+		}
+
+		if ($secure3d != false) {
+			$operation->Secure3D = $secure3d;
 		}
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
