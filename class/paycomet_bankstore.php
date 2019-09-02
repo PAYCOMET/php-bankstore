@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYCOMET
- * @version    2.0.1
+ * @version    2.0.3
  * @author     PAYCOMET
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2019, PAYCOMET
@@ -127,16 +127,17 @@ class Paycomet_Bankstore
 	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription, $owner, $scoring = null, $merchant_data = null, $merchant_description = null)
+	public function ExecutePurchase($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = null, $owner = null, $scoring = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null, $user_interaction = null)
 	{
 		$signature = hash('sha512',$this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip = $this->GetClientIp();
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description);
+			$ans = $clientSOAP->execute_purchase($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description, $sca_exception, $trx_type, $scrow_targets, $user_interaction);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -238,9 +239,10 @@ class Paycomet_Bankstore
 	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $ownerName = null, $scoring = null, $merchant_data = null)
+	public function CreateSubscription($pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $ownerName = null, $scoring = null, $merchant_data = null, $sca_exception = null, $trx_type = null, $scrow_targets = null, $user_interaction = null)
 	{
 		$pan = preg_replace('/\s+/', '', $pan);
 		$expdate = preg_replace('/\s+/', '', $expdate);
@@ -250,7 +252,7 @@ class Paycomet_Bankstore
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, 1, $ownerName, $scoring, $merchant_data);
+			$ans = $clientSOAP->create_subscription($this->merchantCode, $this->terminal, $pan, $expdate, $cvv, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, 1, $ownerName, $scoring, $merchant_data, $sca_exception, $trx_type, $scrow_targets, $user_interaction);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -323,16 +325,17 @@ class Paycomet_Bankstore
 	* @param string $merchant_data (optional) Datos del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-07
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $scoring = null, $merchant_data = null)
+	public function CreateSubscriptionToken($idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $scoring = null, $merchant_data = null, $sca_exception = null, $trx_type = null, $scrow_targets = null, $user_interaction = null)
 	{
 		$signature = hash('sha512',$this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$currency.$this->password);
 		$ip = $this->GetClientIp();
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, $scoring, $merchant_data);
+			$ans = $clientSOAP->create_subscription_token($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $startdate, $enddate, $transreference, $periodicity, $amount, $currency, $signature, $ip, $scoring, $merchant_data, $sca_exception, $trx_type, $scrow_targets, $user_interaction);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -354,16 +357,17 @@ class Paycomet_Bankstore
 	* @param string $merchant_description (optional) Descriptor del Comercio
 	* @return object Objeto de respuesta de la operación
 	* @version 2.0 2016-06-02
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false, $scoring = null, $merchant_data = null, $merchant_description = null)
+	public function CreatePreauthorization($idpayuser, $tokenpayuser, $amount, $transreference, $currency, $productdescription = false, $owner = false, $scoring = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null, $user_interaction = null)
 	{
 		$signature = hash('sha512',$this->merchantCode.$idpayuser.$tokenpayuser.$this->terminal.$amount.$transreference.$this->password);
 		$ip = $this->GetClientIp();
 
 		try{
 			$clientSOAP = new SoapClient($this->endpoint);
-			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description);
+			$ans = $clientSOAP->create_preauthorization($this->merchantCode, $this->terminal, $idpayuser, $tokenpayuser, $amount, $transreference, $currency, $signature, $ip, $productdescription, $owner, $scoring, $merchant_data, $merchant_description, $sca_exception, $trx_type, $scrow_targets, $user_interaction);
 		} catch(SoapFault $e){
 			return $this->SendResponse();
 		}
@@ -569,9 +573,10 @@ class Paycomet_Bankstore
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
+	public function ExecutePurchaseUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
 	{
 		$pretest = array();
 
@@ -605,6 +610,17 @@ class Paycomet_Bankstore
 			$operation->Merchant_description = $merchant_description;
 		}
 
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
+		}
+		
+
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
@@ -632,9 +648,10 @@ class Paycomet_Bankstore
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
+	public function ExecutePurchaseTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
 	{
 		$pretest = array();
 
@@ -669,6 +686,17 @@ class Paycomet_Bankstore
 		if ($merchant_description){
 			$operation->Merchant_description = $merchant_description;
 		}
+
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
+		}
+		
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -770,7 +798,7 @@ class Paycomet_Bankstore
 
 		if ($merchant_data){
 			$operation->Merchant_data = $merchant_data;
-		}
+		}		
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -834,7 +862,7 @@ class Paycomet_Bankstore
 
 		if ($merchant_data){
 			$operation->Merchant_data = $merchant_data;
-		}
+		}		
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -861,9 +889,10 @@ class Paycomet_Bankstore
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
+	public function CreatePreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
 	{
 		$pretest = array();
 
@@ -897,6 +926,16 @@ class Paycomet_Bankstore
 			$operation->Merchant_description = $merchant_description;
 		}
 
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
+		}
+		
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
@@ -1037,9 +1076,10 @@ class Paycomet_Bankstore
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
+	public function ExecutePreauthorizationTokenUrl($transreference, $amount, $currency, $iduser, $tokenuser, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
 	{
 		$pretest = array();
 
@@ -1075,6 +1115,16 @@ class Paycomet_Bankstore
 			$operation->Merchant_description = $merchant_description;
 		}
 
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
+		}
+
 		$check_user_exist = $this->InfoUser($operation->IdUser, $operation->TokenUser);
 		if ($check_user_exist->DS_ERROR_ID != 0) {
 			return $this->SendResponse(array("DS_ERROR_ID" => $check_user_exist->DS_ERROR_ID));
@@ -1105,9 +1155,10 @@ class Paycomet_Bankstore
 	* @return object Objeto de respuesta de la operación
 	* @version 1.0 2016-06-06
 	* @version 1.1 2017-11-22 Añadimos parámetros urlOk y urlKo
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 
-	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null)
+	public function DeferredPreauthorizationUrl($transreference, $amount, $currency, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $merchant_description = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
 	{
 		$pretest = array();
 
@@ -1139,6 +1190,16 @@ class Paycomet_Bankstore
 
 		if ($merchant_description){
 			$operation->Merchant_description = $merchant_description;
+		}
+
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
 		}
 
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
@@ -1263,6 +1324,79 @@ class Paycomet_Bankstore
 	}
 
 	/**
+	* Devuelve la URL para lanzar un execute_purchase_rtoken bajo IFRAME/Fullscreen
+	* @param string $transreference Identificador único del pago
+	* @param string $amount Importe del pago 1€ = 100
+	* @param string $currency Identificador de la moneda de la operación
+	* @param string $identifier Identificador obtenido mediante anterior Pago por Referencia
+	* @param string $group Identificador del código de grupo asociado a la referencia
+	* @param string $lang Idioma de los literales de la transacción
+	* @param string $description Descripción de la operación
+	* @param string $secure3d Forzar la operación por 0 = No segura y 1 = Segura mediante 3DSecure
+	* @param integer $scoring (optional) Valor de scoring de riesgo de la transacción
+	* @param string $urlOk URL a la que redirigir en caso de éxito.
+	* @param string $urlKo URL a la que redirigir en caso de error.
+	* @param string $merchant_data (optional) Datos del Comercio
+	* @param string $merchant_description (optional) Descriptor del Comercio
+	* @return object Objeto de respuesta de la operación
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
+	*/
+
+	public function ExecutePurchaseRTokenUrl($transreference, $amount, $currency, $identifier, $group = null, $lang = "ES", $description = false, $secure3d = false, $scoring = null, $urlOk = null, $urlKo = null, $merchant_data = null, $sca_exception = null, $trx_type = null, $scrow_targets = null)
+	{
+		$pretest = array();
+
+		$operation = new stdClass();
+		$operation->Type = 114;
+		$operation->Reference = $transreference;
+		$operation->Amount = $amount;
+		$operation->Currency = $currency;
+		$operation->Identifier = $identifier;
+		if ($group) {
+			$operation->Group = $group;
+		}
+		$operation->Language = $lang;
+		$operation->Concept = $description;
+		if ($secure3d != false) {
+			$operation->Secure3D = $secure3d;
+		}
+		if ($scoring) {
+			$operation->Scoring = (int)$scoring;
+		}
+
+		if ($urlOk) {
+			$operation->UrlOk = $urlOk;
+		}
+
+		if ($urlKo) {
+			$operation->UrlKo = $urlKo;
+		}
+
+		if ($merchant_data){
+			$operation->Merchant_data = $merchant_data;
+		}		
+
+		if ($sca_exception){
+			$operation->Sca_exception = $sca_exception;
+		}
+		if ($trx_type){
+			$operation->Trx_type = $trx_type;
+		}
+		if ($scrow_targets){
+			$operation->Scrow_targets = $scrow_targets;
+		}
+		
+
+		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
+		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
+
+		$pretest = $this->CheckUrlError($lastrequest);
+		$pretest["URL_REDIRECT"] = ($this->endpointurl.$lastrequest);
+
+		return $this->SendResponse($pretest);
+	}
+
+	/**
 	* Crea una respuesta del servicio PAYCOMET BankStore en objeto
 	* @param array $respuesta Array de la respuesta a ser convertida a objeto
 	* @return object Objeto de respuesta. Se incluye el valor RESULT (OK para correcto y KO incorrecto)
@@ -1292,6 +1426,7 @@ class Paycomet_Bankstore
 	* @param int $operationtype Tipo de operación para generar la firma
 	* @return string Hash de la firma calculado
 	* @version 1.0 2016-06-06
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 	private function GenerateHash($operationdata, $operationtype)
 	{
@@ -1322,6 +1457,8 @@ class Paycomet_Bankstore
 			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 14) {		// Cancelación de Preauthorization Diferida
 			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
+		} elseif ((int)$operationtype == 114) {		// Execute purchase rtoken
+			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		}
 
 		return $hash;
@@ -1334,6 +1471,7 @@ class Paycomet_Bankstore
 	* @return string URL para enviar al ENDPOINTURL
 	* @version 1.0 2016-06-06
 	* @version 1.1.3 2017-12-20
+	* @version 2.0.3 2019-08-30 se añaden parametros PSD2
 	*/
 	private function ComposeURLParams($operationdata, $operationtype)
 	{
@@ -1381,10 +1519,29 @@ class Paycomet_Bankstore
 			if (isset($operationdata->Scoring)) {
 				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
 			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
+			}			
+			
 		} elseif ((int)$operationtype == 3) { // Preauthorization
 			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
 			if (isset($operationdata->Scoring)) {
 				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
 			}
 		} elseif ((int)$operationtype == 6) { // Confirmación de Preauthorization
 			$data["IDUSER"] = $operationdata->IdUser;
@@ -1407,6 +1564,15 @@ class Paycomet_Bankstore
 			if (isset($operationdata->Scoring)) {
 				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
 			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
+			}
 		} elseif ((int)$operationtype == 110) { // create_subscription_token
 			$data["IDUSER"] = $operationdata->IdUser;
 			$data["TOKEN_USER"] = $operationdata->TokenUser;
@@ -1424,10 +1590,28 @@ class Paycomet_Bankstore
 			if (isset($operationdata->Scoring)) {
 				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
 			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
+			}
 		} elseif ((int)$operationtype == 13) { // Deferred Preauthorization
 			$data["MERCHANT_CURRENCY"] = $operationdata->Currency;
 			if (isset($operationdata->Scoring)) {
 				$data["MERCHANT_SCORING"] = $operationdata->Scoring;
+			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
 			}
 		} elseif ((int)$operationtype == 16) { // Deferred Confirmación de Preauthorization
 			$data["IDUSER"] = $operationdata->IdUser;
@@ -1435,6 +1619,20 @@ class Paycomet_Bankstore
 		} elseif ((int)$operationtype == 14) { // Deferred  Cancelación de Preauthorization
 			$data["IDUSER"] = $operationdata->IdUser;
 			$data["TOKEN_USER"] = $operationdata->TokenUser;
+		} elseif ((int)$operationtype == 114) { // execute_purchase_rtoken
+			$data["MERCHANT_IDENTIFIER"] = $operationdata->Identifier;			
+			if (isset($operationdata->Group)) {
+				$data["MERCHANT_GROUP"] = $operationdata->Group;
+			}
+			if (isset($operationdata->Sca_exception)) {
+				$data["MERCHANT_SCA_EXCEPTION"] = $operationdata->Sca_exception;
+			}
+			if (isset($operationdata->Trx_type)) {
+				$data["MERCHANT_TRX_TYPE"] = $operationdata->Trx_type;
+			}
+			if (isset($operationdata->Scrow_targets)) {
+				$data["ESCROW_TARGETS"] = $operationdata->Scrow_targets;
+			}
 		}
 
 		$content = "";

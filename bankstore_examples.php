@@ -51,6 +51,7 @@ $response = $paycomet->ExecutePreauthorizationTokenUrl("operation_reference", "a
 $response = $paycomet->DeferredPreauthorizationUrl("operation_reference", "amount", "currency");
 $response = $paycomet->DeferredPreauthorizationConfirmUrl("operation_reference", "amount", "currency", "iduser", "tokenuser");
 $response = $paycomet->DeferredPreauthorizationCancelUrl("operation_reference", "amount", "currency", "iduser", "tokenuser");
+$response = $paycomet->ExecutePurchaseRTokenUrl("operation_reference", "amount", "currency", "identifier", "group");
 
 if ($response->RESULT == "KO") {
 	var_dump($response);
