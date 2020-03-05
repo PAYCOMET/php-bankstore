@@ -10,7 +10,7 @@
  * bundled with this package in the LICENSE file.
  *
  * @package    PAYCOMET
- * @version    2.0.3
+ * @version    2.0.4
  * @author     PAYCOMET
  * @license    BSD License (3-clause)
  * @copyright  (c) 2010-2019, PAYCOMET
@@ -1469,31 +1469,31 @@ class Paycomet_Bankstore
 
 
 		if ((int)$operationtype == 1) {				// Authorization (execute_purchase)
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 3) {		// Preauthorization
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 6) {		// Confirmación de Preauthorization
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 4) {		// Cancelación de Preauthorization
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 9) {		// Subscription
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 107) {		// Add_user
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.md5($this->password));
 		} elseif ((int)$operationtype == 109) {		// execute_purchase_token
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 110) {		// create_subscription_token
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 111) {		// create_preauthorization_token
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 13) {		// Preauthorization Diferida
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		} elseif ((int)$operationtype == 16) {		// Confirmación de Preauthorization Diferida
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 14) {		// Cancelación de Preauthorization Diferida
-			$hash = md5($this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$operationdata->IdUser.$operationdata->TokenUser.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.md5($this->password));
 		} elseif ((int)$operationtype == 114) {		// Execute purchase rtoken
-			$hash = md5($this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
+			$hash = hash('sha512', $this->merchantCode.$this->terminal.$operationtype.$operationdata->Reference.$operationdata->Amount.$operationdata->Currency.md5($this->password));
 		}
 
 		return $hash;
