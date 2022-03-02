@@ -1752,27 +1752,10 @@ class Paycomet_Bankstore
 			}
 		}
 
-		$content = "";
-		foreach ($data as $key => $value) {
-			if ($content != "") {
-				$content .= "&";
-			}
+		$content = http_build_query($data);
+		$VHASH = hash('sha512', md5($content.md5($this->password)));
 
-			$content .= urlencode($key) . "=" . urlencode($value);
-		}
-
-		$data["VHASH"] = hash('sha512', md5($content.md5($this->password)));
-
-		$secureurlhash = "";
-		foreach ($data as $key => $value) {
-			if ($secureurlhash != "") {
-				$secureurlhash .= "&";
-			}
-
-			$secureurlhash .= urlencode($key) . "=" . urlencode($value);
-		}
-
-		return $secureurlhash;
+		return $content."&VHASH=$VHASH";
 	}
 
 	/**
