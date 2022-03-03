@@ -26,6 +26,16 @@ class Paycomet_Bankstore
 	private $endpointurl;
 	private $jetid;
 
+	/**
+	 * Iniciar clase Payment_Bankstore
+	 *
+	 * @param string $merchantCode  Código de cliente
+	 * @param int	 $terminal		Número de Terminal
+	 * @param string $password		Contraseña
+	 * @param string $jetid			JET ID
+	 * 
+	 * @return self
+	 */
 	public function __construct($merchantCode, $terminal, $password, $jetid = null)
 	{
 		$this->merchantCode = $merchantCode;
