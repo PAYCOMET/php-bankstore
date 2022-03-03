@@ -1591,7 +1591,6 @@ class Paycomet_Bankstore
 	*/
 	private function ComposeURLParams($operationdata, $operationtype)
 	{
-		$secureurlhash = false;
 		$data = array();
 
 		$data["MERCHANT_MERCHANTCODE"] = $this->merchantCode;
