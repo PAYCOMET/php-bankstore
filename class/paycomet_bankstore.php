@@ -26,12 +26,12 @@ class Paycomet_Bankstore
 	private $endpointurl;
 	private $jetid;
 
-	public function __construct($arg1, $arg2, $arg3, $arg4 = NULL)
+	public function __construct($merchantCode, $terminal, $password, $jetid = null)
 	{
-		$this->merchantCode = $arg1;
-		$this->terminal = $arg2;
-		$this->password = $arg3;
-		$this->jetid = $arg4;
+		$this->merchantCode = $merchantCode;
+		$this->terminal = $terminal;
+		$this->password = $password;
+		$this->jetid = $jetid;
 		$this->endpoint = 'https://api.paycomet.com/gateway/xml-bankstore?wsdl';
 		$this->endpointurl = 'https://api.paycomet.com/gateway/ifr-bankstore?';
 	}
