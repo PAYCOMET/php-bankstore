@@ -723,7 +723,7 @@ class Paycomet_Bankstore
 		$operation->Hash = $this->GenerateHash($operation, $operation->Type);
 		$lastrequest = $this->ComposeURLParams($operation, $operation->Type);
 
-		$pretest = $this->CheckUrlError($lastrequest);
+		$pretest = array("DS_ERROR_ID" => 0);
 		$pretest["URL_REDIRECT"] = ($this->endpointurl.$lastrequest);
 
 		return $this->SendResponse($pretest);
