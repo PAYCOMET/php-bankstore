@@ -1757,7 +1757,7 @@ class Paycomet_Bankstore
 			if ($content != "") {
 				$content .= "&";
 			}
-
+			$value = strval($value);
 			$content .= urlencode($key) . "=" . urlencode($value);
 		}
 
@@ -1768,7 +1768,7 @@ class Paycomet_Bankstore
 			if ($secureurlhash != "") {
 				$secureurlhash .= "&";
 			}
-
+			$value = strval($value);
 			$secureurlhash .= urlencode($key) . "=" . urlencode($value);
 		}
 
